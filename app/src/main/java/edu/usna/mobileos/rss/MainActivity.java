@@ -54,8 +54,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         intent.putExtra("URL",siteURL);
         startService(intent);
 
-        intentFilter = new IntentFilter();
-        intentFilter.addAction("WORK_COMPLETE_ACTION");
+
     }
 
     @Override
