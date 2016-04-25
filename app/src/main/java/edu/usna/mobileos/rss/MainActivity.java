@@ -7,6 +7,7 @@ import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.Xml;
 import android.view.View;
 import android.widget.AdapterView;
@@ -35,6 +36,7 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         @Override
         public void onReceive(Context context, Intent intent) {
             rssItemList = intent.getParcelableArrayListExtra("rss");
+            Log.i("Here","gotasdf");
         }
     };
 
@@ -62,9 +64,11 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         super.onResume();
         intentFilter = new IntentFilter();
         intentFilter.addAction("WORK_COMPLETE_ACTION");
-
+        Log.i("Here","got");
         registerReceiver(intentReceiver, intentFilter);
-
+        adapter = new RssItemAdapter(this, android.R.layout.simple_list_item_1, rssItemList);
+        newsListView.setAdapter(adapter);
+        newsListView.setOnItemClickListener(this);
 
     }
 

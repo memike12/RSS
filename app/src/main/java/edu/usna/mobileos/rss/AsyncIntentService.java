@@ -33,11 +33,13 @@ public class AsyncIntentService extends IntentService{
 
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction("WORK_COMPLETE_ACTION");
+        Log.i("Here","gotddd");
         broadcastIntent.putParcelableArrayListExtra("rss", rssItemList);
         getBaseContext().sendBroadcast(broadcastIntent);
     }
 
     private void DoMuchWork( String url) {
+        Log.i("Here","gotffff");
         try {
             URL feedURL = new URL(url);
             rssItemList = parseRSS(feedURL);
