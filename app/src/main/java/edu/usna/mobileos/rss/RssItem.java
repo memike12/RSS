@@ -1,9 +1,15 @@
 package edu.usna.mobileos.rss;
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
+import java.io.Serializable;
+import java.util.Date;
+
 /**
  * Created by m164488 on 4/12/2016.
  */
-public class RssItem {
+public class RssItem implements Parcelable{
 
     private String link;
     private String pubDate;
@@ -35,8 +41,43 @@ public class RssItem {
         this.title = title;
     }
 
+    public static final Parcelable.Creator<RssItem> CREATOR
+            = new Parcelable.Creator<RssItem>() {
+        public RssItem createFromParcel(Parcel in) {
+            return new RssItem(in);
+        }
+
+        public RssItem[] newArray(int size) {
+            return new RssItem[size];
+        }
+    };
+
     @Override
     public String toString() {
         return this.title;
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(link);
+        dest.writeString(pubDate);
+        dest.writeString(description);
+        dest.writeString(title);
+    }
+
+    private RssItem(Parcel in) {
+        link = in.readString();
+        pubDate = in.readString();
+        description = in.readString();
+        title = in.readString();
+
+    }
+
+    public RssItem() {
     }
 }

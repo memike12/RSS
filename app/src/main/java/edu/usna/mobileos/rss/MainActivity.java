@@ -1,5 +1,9 @@
 package edu.usna.mobileos.rss;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.os.AsyncTask;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -25,6 +29,14 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
     public ListView newsListView;
     public ArrayAdapter<RssItem> adapter;
     public List<RssItem> rssItemList = new ArrayList<RssItem>();
+    IntentFilter intentFilter;
+
+    private BroadcastReceiver intentReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            rssItemList = intent.getParcelableArrayListExtra("rss");
+        }
+    };
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -37,65 +49,42 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         newsListView.setOnItemClickListener(this);
 
         String siteURL = "http://usnatrident.blogspot.com/feeds/posts/default?alt=rss";
-        new RetrieveFeedTask().execute(siteURL);
+
+        Intent intent = new Intent(getBaseContext(),AsyncIntentService.class);
+        intent.putExtra("URL",siteURL);
+        startService(intent);
+
+        intentFilter = new IntentFilter();
+        intentFilter.addAction("WORK_COMPLETE_ACTION");
     }
 
-    public List<RssItem> parseRSS(URL feedURL)
-            throws XmlPullParserException, IOException {
+    @Override
+    public void onResume() {
+        super.onResume();
+        intentFilter = new IntentFilter();
+        intentFilter.addAction("WORK_COMPLETE_ACTION");
 
-        XmlPullParser parser = Xml.newPullParser();
-        parser.setInput(feedURL.openStream(), null);
+        registerReceiver(intentReceiver, intentFilter);
 
-        int eventType = parser.getEventType();
 
-        boolean done = false;
-
-        RssItem currentRSSItem= new RssItem();
-
-        while (eventType != XmlPullParser.END_DOCUMENT && !done) {
-            String name = null;
-            switch (eventType) {
-                case XmlPullParser.START_TAG:
-                    name = parser.getName();
-                    if (name.equalsIgnoreCase("item")) {
-                        // a new item element
-                        currentRSSItem = new RssItem();
-                    } else if (currentRSSItem != null) {
-                        if (name.equalsIgnoreCase("link")) {
-                            currentRSSItem.setLink(parser.nextText());
-                        } else if (name.equalsIgnoreCase("description")) {
-                            currentRSSItem.setDescription(parser.nextText());
-                        } else if (name.equalsIgnoreCase("pubDate")) {
-                            currentRSSItem.setPubDate(parser.nextText());
-                        } else if (name.equalsIgnoreCase("title")) {
-                            currentRSSItem.setTitle(parser.nextText());
-                        }
-                    }
-                    break;
-                case XmlPullParser.END_TAG:
-                    name = parser.getName();
-                    if (name.equalsIgnoreCase("item") && currentRSSItem != null) {
-                        rssItemList.add(currentRSSItem);
-                    } else if (name.equalsIgnoreCase("channel")) {
-                        done = true;
-                    }
-                    break;
-            }
-            eventType = parser.next();
-        }
-        return rssItemList;
     }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        // unregister the broadcast receiver
+        unregisterReceiver(intentReceiver);
+    }
+
 
     //------- AsyncTask ------------//
     class RetrieveFeedTask extends AsyncTask<String, Integer, Integer> {
         protected Integer doInBackground(String... urls) {
             try {
                 URL feedURL = new URL(urls[0]);
-                rssItemList = parseRSS(feedURL);
+                //rssItemList = parseRSS(feedURL);
             } catch (MalformedURLException e) {
-                // TODO Auto-generated catch block
-                e.printStackTrace();
-            } catch (XmlPullParserException e) {
                 // TODO Auto-generated catch block
                 e.printStackTrace();
             } catch (IOException e) {
@@ -115,7 +104,9 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         // actions to execute to do when an item is clicked
 
         RssItem RssItemClicked = adapter.getItem(pos);
-        Toast.makeText(getBaseContext(), RssItemClicked.getLink(), Toast.LENGTH_SHORT).show();
-
+        //Toast.makeText(getBaseContext(), RssItemClicked.getLink(), Toast.LENGTH_SHORT).show();
+        Intent intent = new Intent(getBaseContext(), WebViewActivity.class);
+        intent.putExtra("article", RssItemClicked.getLink());
+        startActivity(intent);
     }
 }
