@@ -10,7 +10,7 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * Created by m164488 on 4/12/2016.
+ * This is a sweet adapter.
  */
 public class RssItemAdapter extends ArrayAdapter<RssItem> {
 

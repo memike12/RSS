@@ -3,6 +3,7 @@
     package="edu.usna.mobileos.rss">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
 
     <application
         android:allowBackup="true"
@@ -17,7 +18,19 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+
         <activity android:name=".WebViewActivity"></activity>
+        <service android:name=".AsyncIntentService" />
+
+        <service
+            android:name="edu.usna.mobileos.rss.ServiceReceivingAlarm"
+            android:exported="false" >
+        </service>
+
+        <receiver
+            android:name="edu.usna.mobileos.rss.AlarmReceiver"
+            android:process=":remote" />
+
     </application>
 
 </manifest>

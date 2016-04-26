@@ -15,7 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Created by root on 4/25/16.
+ * AsyncIntentService takes a URL and then sends back the rssItemList it creates
  */
 public class AsyncIntentService extends IntentService{
     public ArrayList<RssItem> rssItemList = new ArrayList<RssItem>();
@@ -26,20 +26,18 @@ public class AsyncIntentService extends IntentService{
 
     @Override
     protected void onHandleIntent(Intent intent) {
-        //Log.i("PEPIN", "AsyncIntentService started working");
+        Log.i("Feed", "AsyncIntentService started working");
         String url = intent.getStringExtra("URL");
         DoMuchWork(url);
-        //Log.i("PEPIN", "AsyncIntentService done working");
 
         Intent broadcastIntent = new Intent();
         broadcastIntent.setAction("WORK_COMPLETE_ACTION");
-        Log.i("Here","gotddd");
+
         broadcastIntent.putParcelableArrayListExtra("rss", rssItemList);
         getBaseContext().sendBroadcast(broadcastIntent);
     }
 
     private void DoMuchWork( String url) {
-        Log.i("Here","gotffff");
         try {
             URL feedURL = new URL(url);
             rssItemList = parseRSS(feedURL);
