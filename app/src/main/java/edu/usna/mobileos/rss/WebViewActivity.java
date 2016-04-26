@@ -6,6 +6,9 @@ import android.os.Bundle;
 import android.webkit.WebView;
 import android.webkit.WebViewClient;
 
+/*************
+ * WebViewActivity makes a webView. One of my hardest workers.
+ */
 public class WebViewActivity extends AppCompatActivity {
 
     @Override

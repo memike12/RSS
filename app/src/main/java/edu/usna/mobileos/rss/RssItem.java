@@ -7,7 +7,9 @@ import java.io.Serializable;
 import java.util.Date;
 
 /**
- * WHAT PARCELABLE!?! necessary.
+ * WHAT PARCELABLE!?!
+ *
+ * ... necessary.
  */
 public class RssItem implements Parcelable{
 

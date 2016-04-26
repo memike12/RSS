@@ -10,7 +10,8 @@ import android.widget.TextView;
 import java.util.List;
 
 /**
- * This is a sweet adapter.
+ * This is a sweet adapter that displays a title and a date that's formatted so poorly,
+ * it hurts the eyes
  */
 public class RssItemAdapter extends ArrayAdapter<RssItem> {
 

@@ -49,7 +49,6 @@ public class AsyncIntentService extends IntentService{
         } catch (IOException e) {
             e.printStackTrace();
         }
-//        return rssItemList;
     }
     public ArrayList<RssItem> parseRSS(URL feedURL)
             throws XmlPullParserException, IOException {

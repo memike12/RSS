@@ -39,6 +39,8 @@ import java.util.List;
 /********************
  * Main Activity is the work horse of the app.
  * I completed this assignment with only my own blood, sweat, and tears.
+ * WOW. 10/10 for effiency! Actually, I used asyncTask for really no reason to set the alarm.
+ * I thought it might be fun.
  */
 
 public class MainActivity extends AppCompatActivity implements AdapterView.OnItemClickListener {
@@ -100,7 +102,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         Intent intent = new Intent(getBaseContext(), AlarmReceiver.class);
         pendingIntent = PendingIntent.getBroadcast(getBaseContext(), 0, intent, 0);
 
-        //setAlarm(this.findViewById(android.R.id.content));
         new SetAlarmTask().execute();
         notificationManager = (NotificationManager) this.getSystemService(Context.NOTIFICATION_SERVICE);
     }
@@ -112,10 +113,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         intentFilter.addAction("WORK_COMPLETE_ACTION");
         Log.i("Feed","Work Complete");
         registerReceiver(intentReceiver, intentFilter);
-//        adapter = new RssItemAdapter(this, android.R.layout.simple_list_item_1, rssItemList);
-//        newsListView.setAdapter(adapter);
-//        newsListView.setOnItemClickListener(this);
-
     }
 
     @Override
@@ -145,7 +142,6 @@ public class MainActivity extends AppCompatActivity implements AdapterView.OnIte
         if(isConnectedToInternet(this)) {
 
             RssItem RssItemClicked = adapter.getItem(pos);
-            //Toast.makeText(getBaseContext(), RssItemClicked.getLink(), Toast.LENGTH_SHORT).show();
             Intent intent = new Intent(getBaseContext(), WebViewActivity.class);
             intent.putExtra("article", RssItemClicked.getLink());
             startActivity(intent);
